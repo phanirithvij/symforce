@@ -1,0 +1,30 @@
+diff --git a/symforce/opt/CMakeLists.txt b/symforce/opt/CMakeLists.txt
+index b9cb99ff..c5f282ce 100644
+--- a/symforce/opt/CMakeLists.txt
++++ b/symforce/opt/CMakeLists.txt
+@@ -105,7 +105,15 @@ function(add_metis)
+   target_include_directories(metis INTERFACE ${metis_SOURCE_DIR}/include)
+ endfunction()
+ 
+-add_metis()
++find_library(METIS_LIBRARY
++  NAMES metis
++  PATHS "@metis@/lib"
++  NO_DEFAULT_PATH)
++
++find_path(METIS_INCLUDE_DIR
++  NAMES metis.h
++  PATHS "$@metis@/include"
++  NO_DEFAULT_PATH)
+ 
+ # ==============================================================================
+ # SymForce Targets
+@@ -125,7 +133,7 @@ add_library(
+ target_compile_options(symforce_cholesky PRIVATE ${SYMFORCE_COMPILE_OPTIONS})
+ target_link_libraries(symforce_cholesky
+   fmt::fmt
+-  metis
++  ${METIS_LIBRARY}
+   ${SYMFORCE_EIGEN_TARGET}
+ )
+ target_include_directories(symforce_cholesky PUBLIC ../..)
