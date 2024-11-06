@@ -877,6 +877,16 @@ CWRAPPER_OUTPUT_TYPE basic_min(basic s, CVecBasic *d)
 
 struct CDenseMatrix {
     SymEngine::DenseMatrix m;
+    struct Init {
+        unsigned rows;
+        unsigned cols;
+        const SymEngine::vec_basic& vec;
+    };
+    CDenseMatrix(): m() {}
+    CDenseMatrix(std::initializer_list<std::initializer_list<unsigned>> dims)
+        : m(*(dims.begin()->begin()), *(dims.begin()->begin() + 1)) {}
+    CDenseMatrix(std::initializer_list<Init> init)
+        : m(init.begin()->rows, init.begin()->cols, init.begin()->vec) {}
 };
 
 struct CSparseMatrix {
